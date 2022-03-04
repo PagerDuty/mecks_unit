@@ -52,10 +52,15 @@ defmodule MecksUnit.Server do
 
   def handle_call({:running, pid}, _from, %{running: running} = state) do
     ancestors =
-      pid
-      |> Process.info()
-      |> Keyword.get(:dictionary)
-      |> Keyword.get(:"$ancestors", [])
+      case Process.info(pid) do
+        nil ->
+          []
+
+        info ->
+          info
+          |> Keyword.get(:dictionary)
+          |> Keyword.get(:"$ancestors", [])
+      end
 
     running =
       Enum.find_value([pid] ++ ancestors, fn pid ->
