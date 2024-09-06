@@ -60,7 +60,10 @@ defmodule MecksUnit do
     |> Enum.map(fn
       {:def, _, [{func, _meta, args} | _tail]} ->
         {module, func, args |> List.wrap() |> length()}
-        _ -> nil ## for mofule attributes
+
+      ## for mofule attributes
+      _ ->
+        nil
     end)
     |> Enum.filter(&(&1 != nil))
   end

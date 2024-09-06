@@ -30,8 +30,8 @@ defmodule MecksUnit.MixProject do
 
   defp deps do
     [
-      {:meck, "~> 0.8.8"},
-      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false}
+      {:meck, "~> 0.8"},
+      {:ex_doc, "~> 0.18", only: :dev, runtime: false}
     ]
   end
 
