@@ -17,47 +17,65 @@ defmodule MecksUnit.Case do
     quote do
       postfix = if unquote(preserve), do: "__INDEX__", else: @mock_index
 
-      name = Module.concat([
-        Enum.join([__MODULE__, postfix]),
-        unquote_splicing(List.wrap(name))
-      ])
+      name =
+        Module.concat([
+          Enum.join([__MODULE__, postfix]),
+          unquote_splicing(List.wrap(name))
+        ])
 
-      attrs = if unquote(attributes), do:
-        Enum.map(unquote(attributes), fn attr ->
-          val = Module.get_attribute(__MODULE__, attr, :default)
-          if val == :default do
-            nil
-          else
-            {:@, [line: 0], [{attr, [line: 0], [ Macro.escape(val) ]}]}
-          end
-        end)
-        |> Enum.filter(&(&1 != nil)),
-      else: []
+      attrs =
+        if unquote(attributes),
+          do:
+            Enum.map(unquote(attributes), fn attr ->
+              val = Module.get_attribute(__MODULE__, attr, :default)
+
+              if val == :default do
+                nil
+              else
+                {:@, [line: 0], [{attr, [line: 0], [Macro.escape(val)]}]}
+              end
+            end)
+            |> Enum.filter(&(&1 != nil)),
+          else: []
 
       block = unquote(Macro.escape(block))
 
       cond do
         unquote(as) != nil -> @flagged_mocks {unquote(as), name, attrs ++ block}
-        unquote(preserve)  -> @preserved_mocks {name, attrs ++ block}
-        true               -> @mocks {name, attrs ++ block}
+        unquote(preserve) -> @preserved_mocks {name, attrs ++ block}
+        true -> @mocks {name, attrs ++ block}
       end
     end
   end
 
   defmacro mocked_test(message, options \\ [], pattern \\ nil, block) do
-      {options, pattern} = cond do
-        Keyword.keyword?(options) -> {options, pattern} 
+    {options, pattern} =
+      cond do
+        Keyword.keyword?(options) -> {options, pattern}
         true -> {[], options}
       end
-      args = if pattern != nil, do: [message, pattern], else: [message]
+
+    args = if pattern != nil, do: [message, pattern], else: [message]
 
     quote do
       used_flags = if unquote(options) != nil, do: Keyword.get(unquote(options), :use), else: nil
-      used_mocks = if used_flags != nil, do: Enum.filter(Enum.map(@flagged_mocks, fn
-        {k, n, b} -> if k in used_flags, do: {n, b}, else: nil
-      end), &(&1 != nil)), else: []
 
-      MecksUnit.define_mocks(Enum.reverse(@preserved_mocks) ++ @mocks ++ used_mocks, __MODULE__, @mock_index)
+      used_mocks =
+        if used_flags != nil,
+          do:
+            Enum.filter(
+              Enum.map(@flagged_mocks, fn
+                {k, n, b} -> if k in used_flags, do: {n, b}, else: nil
+              end),
+              &(&1 != nil)
+            ),
+          else: []
+
+      MecksUnit.define_mocks(
+        Enum.reverse(@preserved_mocks) ++ @mocks ++ used_mocks,
+        __MODULE__,
+        @mock_index
+      )
 
       test unquote_splicing(args) do
         mock_env = Enum.join([__MODULE__, @mock_index])
@@ -90,7 +108,7 @@ defmodule MecksUnit.Case do
           |> Enum.reduce([""], fn {p, {m, f, a}, r}, calls ->
             p = inspect(p)
             m = String.replace("#{m}", "Elixir.", "")
-            a = String.slice(inspect(a), 1..-2)
+            a = String.slice(inspect(a), 1..-2//-1)
             r = inspect(r)
             ["#{p} #{m}.#{f}(#{a}) #=> #{r}"]
           end)
