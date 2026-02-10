@@ -33,6 +33,7 @@ defmodule TestApp.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:machete, "~> 0.3", only: :test},
       {:ssl_verify_fun, "~> 1.1.0", manager: :rebar3, override: true, override: true},
       {:excoveralls, "~> 0.10", only: :test},
       {:mecks_unit, path: ".."}
