@@ -5,7 +5,7 @@ defmodule MecksUnit.MixProject do
     [
       app: :mecks_unit,
       version: "0.1.8",
-      elixir: "~> 1.6",
+      elixir: "~> 1.19",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
