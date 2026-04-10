@@ -30,6 +30,7 @@ defmodule MecksUnit.MixProject do
 
   defp deps do
     [
+      {:machete, "~> 0.3", only: :test},
       {:meck, "~> 0.8"},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false}
     ]
