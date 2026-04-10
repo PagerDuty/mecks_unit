@@ -1,5 +1,9 @@
 ## MecksUnit CHANGELOG
 
+### Version 1.0.0 (April 10, 2026)
+
+* Upgraded to support Elixir 1.19 and Erlang 28.1
+
 ### Version 0.1.8 (March 29, 2019)
 
 * Fix extracting preserved mock functions (thanks for reporting @naag)
