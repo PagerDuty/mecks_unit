@@ -11,7 +11,7 @@ To install MecksUnit, please do the following:
       ```elixir
       def deps do
         [
-          {:mecks_unit, "~> 0.1.8", only: :test}
+          {:mecks_unit, "~> 1.0", only: :test}
         ]
       end
       ```

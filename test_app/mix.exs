@@ -5,11 +5,16 @@ defmodule TestApp.MixProject do
     [
       app: :test_app,
       version: "0.1.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
+      test_coverage: [tool: ExCoveralls]
+    ]
+  end
+  
+  def cli do
+    [
+      preferred_envs: [
         coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
@@ -28,6 +33,8 @@ defmodule TestApp.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:machete, "~> 0.3", only: :test},
+      {:ssl_verify_fun, "~> 1.1.0", manager: :rebar3, override: true},
       {:excoveralls, "~> 0.10", only: :test},
       {:mecks_unit, path: ".."}
     ]
